@@ -8,7 +8,7 @@ Demo
   <http://blog-imgs-51-origin.fc2.com/e/l/i/elicon/20130125115221442.html>
 
 How to Use
-_________
+--------
     <script source="/js/jpg.js" />
     <script source="/js/MinifyJpeg.js" />
     ******************************************
@@ -27,5 +27,5 @@ _________
     reader.readAsDataURL(f);
 
 Depend on
-_________
+--------
   <https://github.com/notmasteryet/jpgjs>
