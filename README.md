@@ -20,8 +20,9 @@ How to Use
             var minified = MinifyJpeg.minify(e.target.result, 1280);
 
             // add image to body
-            var enc = "data:image/jpeg;base64," + MinifyJpeg.encode64(minified);
-            $('body').append('<img src="' + enc + '" alt="">');
+            var img = new Image();
+            img.src = "data:image/jpeg;base64," + MinifyJpeg.encode64(minified);
+            $('body').append(img);
         }
     })(f);
     reader.readAsDataURL(f);
