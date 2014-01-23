@@ -9,23 +9,29 @@ Demo
 
 How to Use
 --------
+    <input type="file" id="files" name="files[]" multiple />
     <script source="/js/jpg.js" />
     <script source="/js/MinifyJpeg.js" />
     ******************************************
-    var reader = new FileReader();
-    reader.onloadend = (function(theFile)
-    {
-        return function(e)
-        {
-            var minified = MinifyJpeg.minify(e.target.result, 1280);
+    function handleFileSelect(evt) {
+        var files = evt.target.files;
 
-            // add image to body
-            var img = new Image();
-            img.src = "data:image/jpeg;base64," + MinifyJpeg.encode64(minified);
-            $('body').append(img);
+        for (var i = 0, f; f = files[i]; i++) {
+            var reader = new FileReader();
+            reader.onloadend = (function(theFile)            {
+                return function(e)                {
+                    var minified = MinifyJpeg.minify(e.target.result, 1280);
+
+                    // add image to body
+                    var img = new Image();
+                    img.src = "data:image/jpeg;base64," + MinifyJpeg.encode64(minified);
+                    $('body').append(img);
+                }
+            })(f);
+
+            reader.readAsDataURL(f);
         }
-    })(f);
-    reader.readAsDataURL(f);
+    }
 
 Depend on
 --------
