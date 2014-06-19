@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="jpg.js"></script>
+  <script src="MinifyJpeg.js"></script>
+</head>
+<body>
+    長辺の長さ(longside length): <input type="text" id="length" value="1280"><br><br>
+    <div id="up">JPEG FILES ONLY<br>You can choose multiple files<br></div>
+    <div id="shori"></div>
+<script>
+processedFiles = [];
+fileArray = [];
+
+function handleFileSelect(evt) {
+    length = parseInt($('#length').val());
+    if (!length){return;}
+    var files = evt.target.files; // FileList object
+    fileArray = [];
+    for (var x=0; x<files.length ; x++)
+    {
+        fileArray.push(files[x]);
+    }
+    handleFiles();
+}
+
+function handleFiles()
+{
+    if (fileArray.length == 0)
+    {
+        $("#keika").html("FINISHED")
+        return;
+    }
+    while (!fileArray[0].type.match('image/jpeg.*'))
+    {
+        if (fileArray.length == 0)
+        {
+            $("#keika").html("FINISHED")
+            return;
+        }
+        else
+        {
+            fileArray.shift(0);
+        }
+    }
+    f = fileArray.shift(0);
+    $("#keika").html("Left: " + (fileArray.length + 1));
+    if (processedFiles.indexOf(f.name) >= 0){return handleFiles(fileArray);}
+    processedFiles.push(f.name);
+    var reader = new FileReader();
+    var n = processedFiles.length;
+    $("#shori").prepend('<div id="load' + n + '">loading: ' + f.name + '</div>');
+
+    // Closure to capture the file information.
+    reader.onloadend = (function(theFile, num)
+    {
+        return function(e)
+        {
+            var minified = MinifyJpeg.minify(e.target.result, length);
+            //postData(minified, theFile.name, num);
+
+            var enc = "data:image/jpeg;base64," + MinifyJpeg.encode64(minified);
+            var html = '<br><div id="s' + num + '"><img src="' + enc + '"><br>' +
+                       'loaded: ' + theFile.name + '</div><br>';
+            $('#load' + num).html(html);
+            handleFiles();
+        };
+    })(f, n);
+
+    // Read in the image file as a data URL.
+    reader.readAsDataURL(f);
+}
+
+function postData(data, name, i)
+{
+    var oReq = new XMLHttpRequest();
+    oReq.open("POST", "/resize", false);
+    oReq.setRequestHeader('Content-Type', 'image\/jpeg');
+    oReq.onload = function (oEvent)
+    {
+        var enc = "data:image/jpeg;base64," + MinifyJpeg.encode64(data);
+        var html = '<br><div id="s' + i + '"><img src="' + enc + '"><br>' +
+                   'Uploaded: ' + name + '</div><br>';
+        $('#load' + i).html(html);
+        handleFiles();
+    }
+
+    oReq.send(data.buffer);
+}
+
+if (typeof(FileReader) == "function")
+{
+    var html = '<input type="file" id="files" class="form" name="files[]" multiple /><br>' +
+               '<div id="keika"><div>'
+    $('#up').append(html);
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+}
+else
+{
+    var html = '<form action="/up" method="post" enctype="multipart/form-data">' +
+               '<fieldset><legend>写真を追加</legend>' +
+               '<input type="file" name="photo[]" multiple/><br>' +
+               '<input type = "submit" value="写真を送る">' +
+               '</fieldset></form><br><br>';
+    $('#up').append("");
+}
+</script>
+</body>
+</html>

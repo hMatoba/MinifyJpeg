@@ -16,10 +16,10 @@ How to Use
     function handleFileSelect(evt) {
         var files = evt.target.files;
 
-        for (var i = 0, f; f = files[i]; i++) {
+        for (var i = 0, f; f = files[i]; i++){
             var reader = new FileReader();
-            reader.onloadend = (function(theFile)            {
-                return function(e)                {
+            reader.onloadend = (function(theFile){
+                return function(e){
                     var minified = MinifyJpeg.minify(e.target.result, 1280);
 
                     // add image to body
