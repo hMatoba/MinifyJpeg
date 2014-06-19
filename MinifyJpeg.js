@@ -15,28 +15,28 @@
 
 var MinifyJpeg = (function()
 {
-    var MinifyJpeg = {};
+    var that = {};
 
-    MinifyJpeg.KEY_STR = "ABCDEFGHIJKLMNOP" +
-                         "QRSTUVWXYZabcdef" +
-                         "ghijklmnopqrstuv" +
-                         "wxyz0123456789+/" +
-                         "=";
+    that.KEY_STR = "ABCDEFGHIJKLMNOP" +
+        "QRSTUVWXYZabcdef" +
+        "ghijklmnopqrstuv" +
+        "wxyz0123456789+/" +
+        "=";
 
-    MinifyJpeg.SOF = [192, 193, 194, 195, 197, 198, 199, 201, 202, 203, 205, 206, 207];
+    that.SOF = [192, 193, 194, 195, 197, 198, 199, 201, 202, 203, 205, 206, 207];
 
-    MinifyJpeg.minify = function(imageStr, chouhen)
+    that.minify = function(imageStr, chouhen)
     {
         if (!imageStr.match("data:image/jpeg;base64,")){throw "MinifyJpeg.minify got a not JPEG data";}
         var startTime = new Date();
         var NEW_SIZE = parseInt(chouhen);
-        var rawImage = this.decode64(imageStr.replace("data:image/jpeg;base64,", ""));
-        var segments = this.slice2Segments(rawImage);
-        var resized = this.resizeImage(imageStr, rawImage, segments, NEW_SIZE);
+        var rawImage = that.decode64(imageStr.replace("data:image/jpeg;base64,", ""));
+        var segments = that.slice2Segments(rawImage);
+        var resized = that.resizeImage(imageStr, rawImage, segments, NEW_SIZE);
 
         if (resized)
         {
-            var image = this.exifManipulation(resized, segments);
+            var image = that.exifManipulation(resized, segments);
         }
         else
         {
@@ -47,13 +47,13 @@ var MinifyJpeg = (function()
         return image;
     };
 
-    MinifyJpeg.getImageSize = function(imageArray)
+    that.getImageSize = function(imageArray)
     {
-        var segments = this.slice2Segments(imageArray);
-        return this.imageSizeFromSegments(segments);
+        var segments = that.slice2Segments(imageArray);
+        return that.imageSizeFromSegments(segments);
     };
 
-    MinifyJpeg.slice2Segments = function(rawImageArray)
+    that.slice2Segments = function(rawImageArray)
     {
         var head = 0,
             segments = [];
@@ -79,12 +79,12 @@ var MinifyJpeg = (function()
         return segments;
     };
 
-    MinifyJpeg.imageSizeFromSegments = function(segments)
+    that.imageSizeFromSegments = function(segments)
     {
         for  (var x=0; x<segments.length; x++)
         {
             var seg = segments[x];
-            if (this.SOF.indexOf(seg[1]) >= 0)
+            if (that.SOF.indexOf(seg[1]) >= 0)
             {
                 var height = seg[5] * 256 + seg[6],
                     width = seg[7] * 256 + seg[8];
@@ -94,7 +94,7 @@ var MinifyJpeg = (function()
         return [width, height];
     };
 
-    MinifyJpeg.encode64 = function(input)
+    that.encode64 = function(input)
     {
         var output = "",
             chr1, chr2, chr3 = "",
@@ -117,17 +117,17 @@ var MinifyJpeg = (function()
                enc4 = 64;
             }
 
-            output += this.KEY_STR.charAt(enc1) +
-                              this.KEY_STR.charAt(enc2) +
-                              this.KEY_STR.charAt(enc3) +
-                              this.KEY_STR.charAt(enc4);
+            output += that.KEY_STR.charAt(enc1) +
+                              that.KEY_STR.charAt(enc2) +
+                              that.KEY_STR.charAt(enc3) +
+                              that.KEY_STR.charAt(enc4);
             chr1 = chr2 = chr3 = "";
             enc1 = enc2 = enc3 = enc4 = "";
         } while (i < input.length);
         return output;
     };
 
-    MinifyJpeg.decode64 = function(input) {
+    that.decode64 = function(input) {
         var output = "",
                chr1, chr2, chr3 = "",
                enc1, enc2, enc3, enc4 = "",
@@ -144,10 +144,10 @@ var MinifyJpeg = (function()
         input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");       
 
         do {
-            enc1 = this.KEY_STR.indexOf(input.charAt(i++));
-            enc2 = this.KEY_STR.indexOf(input.charAt(i++));
-            enc3 = this.KEY_STR.indexOf(input.charAt(i++));
-            enc4 = this.KEY_STR.indexOf(input.charAt(i++));
+            enc1 = that.KEY_STR.indexOf(input.charAt(i++));
+            enc2 = that.KEY_STR.indexOf(input.charAt(i++));
+            enc3 = that.KEY_STR.indexOf(input.charAt(i++));
+            enc4 = that.KEY_STR.indexOf(input.charAt(i++));
 
             chr1 = (enc1 << 2) | (enc2 >> 4);
             chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
@@ -170,9 +170,9 @@ var MinifyJpeg = (function()
         return buf;
     };
 
-    MinifyJpeg.resizeImage = function(imageStr, rawImage, segments, NEW_SIZE)
+    that.resizeImage = function(imageStr, rawImage, segments, NEW_SIZE)
     {
-        var size = this.imageSizeFromSegments(segments),
+        var size = that.imageSizeFromSegments(segments),
             width = size[0],
             height = size[1],
             chouhen = (width>=height) ? width : height,
@@ -206,7 +206,7 @@ var MinifyJpeg = (function()
         	newCanvas.height = newHeight;
             var newCtx = newCanvas.getContext("2d");
         	var destImg = newCtx.createImageData(newWidth, newHeight);
-        	this.bilinear(srcImg, destImg, scale);
+        	that.bilinear(srcImg, destImg, scale);
 
         	newCtx.putImageData(destImg, 0, 0);
             var resizedImage = newCanvas.toDataURL("image/jpeg");
@@ -230,7 +230,7 @@ var MinifyJpeg = (function()
         return resizedImage;
     };
 
-    MinifyJpeg.getExifArray = function(segments)
+    that.getExifArray = function(segments)
     {
         var seg;
         for (var x=0; x<segments.length; x++)
@@ -244,10 +244,10 @@ var MinifyJpeg = (function()
         return [];
     }
 
-    MinifyJpeg.insertExif = function(imageStr, exifArray)
+    that.insertExif = function(imageStr, exifArray)
     {
         var imageData = imageStr.replace("data:image/jpeg;base64,", ""),
-            buf = this.decode64(imageData),
+            buf = that.decode64(imageData),
             separatePoint = buf.indexOf(255,3),
             mae = buf.slice(0, separatePoint),
             ato = buf.slice(separatePoint),
@@ -258,10 +258,10 @@ var MinifyJpeg = (function()
         return array
     };
 
-    MinifyJpeg.exifManipulation = function(lostExifImageStr, segments)
+    that.exifManipulation = function(lostExifImageStr, segments)
     {
-        var exifArray = this.getExifArray(segments),
-            newImageArray = this.insertExif(lostExifImageStr, exifArray),
+        var exifArray = that.getExifArray(segments),
+            newImageArray = that.insertExif(lostExifImageStr, exifArray),
             aBuffer = new Uint8Array(newImageArray);
 
         return aBuffer;
@@ -269,12 +269,12 @@ var MinifyJpeg = (function()
 
 
     // compute vector index from matrix one
-    MinifyJpeg.ivect = function (ix, iy, w) {
+    that.ivect = function (ix, iy, w) {
     	// byte array, r,g,b,a
     	return((ix + w * iy) * 4);
     };
 
-    MinifyJpeg.bilinear = function (srcImg, destImg, scale) {
+    that.bilinear = function (srcImg, destImg, scale) {
     	// c.f.: wikipedia english article on bilinear interpolation
     	//log.debug("in bilinear");
     	// taking the unit square
@@ -299,33 +299,33 @@ var MinifyJpeg = (function()
                 ixv = (j + 0.5) / scale - 0.5;
     			ix0 = Math.floor(ixv);
     			ix1 = ( Math.ceil(ixv) > (srcWidth-1) ? (srcWidth-1) : Math.ceil(ixv) );
-    			idxD = this.ivect(j, i, destImg.width);
-    			idxS00 = this.ivect(ix0, iy0, srcWidth);
-    			idxS10 = this.ivect(ix1, iy0, srcWidth);
-    			idxS01 = this.ivect(ix0, iy1, srcWidth);
-    			idxS11 = this.ivect(ix1, iy1, srcWidth);
+    			idxD = that.ivect(j, i, destImg.width);
+    			idxS00 = that.ivect(ix0, iy0, srcWidth);
+    			idxS10 = that.ivect(ix1, iy0, srcWidth);
+    			idxS01 = that.ivect(ix0, iy1, srcWidth);
+    			idxS11 = that.ivect(ix1, iy1, srcWidth);
     			// log.debug(sprintf("bilinear: idx: D: %d, S00: %d, S10: %d, S01: %d, S11: %d", idxD, idxS00, idxS10, idxS01, idxS11));
     			dx = ixv - ix0; dy = iyv - iy0;
 
                 //r
     			dstData[idxD] = inner(srcData[idxS00], srcData[idxS10],
-    				srcData[idxS01], srcData[idxS11], dx, dy);
+                srcData[idxS01], srcData[idxS11], dx, dy);
 
                 //g
     			dstData[idxD+1] = inner(srcData[idxS00+1], srcData[idxS10+1],
-    				srcData[idxS01+1], srcData[idxS11+1], dx, dy);
+                srcData[idxS01+1], srcData[idxS11+1], dx, dy);
 
                 //b
     			dstData[idxD+2] = inner(srcData[idxS00+2], srcData[idxS10+2],
-    				srcData[idxS01+2], srcData[idxS11+2], dx, dy);
+                srcData[idxS01+2], srcData[idxS11+2], dx, dy);
 
                 //a
     			dstData[idxD+3] = inner(srcData[idxS00+3], srcData[idxS10+3],
-    				srcData[idxS01+3], srcData[idxS11+3], dx, dy);
+                srcData[idxS01+3], srcData[idxS11+3], dx, dy);
 
     			// log.debug(sprintf("pixel: j:%d, i:%d; r:%d, g:%d, b:%d", j, i, r, g, b));
     		}
     	}
     };
-    return MinifyJpeg;
+    return that;
 })();
