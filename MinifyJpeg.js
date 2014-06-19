@@ -43,15 +43,15 @@ var MinifyJpeg = (function()
             var image = new Uint8Array(rawImage);
         }
         var time = ((new Date()) - startTime) / 1000;
-        console.log(time + "[s]")
+        console.log(time + "[s]");
         return image;
-    }
+    };
 
     MinifyJpeg.getImageSize = function(imageArray)
     {
         var segments = this.slice2Segments(imageArray);
         return this.imageSizeFromSegments(segments);
-    }
+    };
 
     MinifyJpeg.slice2Segments = function(rawImageArray)
     {
@@ -77,7 +77,7 @@ var MinifyJpeg = (function()
         }
 
         return segments;
-    }
+    };
 
     MinifyJpeg.imageSizeFromSegments = function(segments)
     {
@@ -92,7 +92,7 @@ var MinifyJpeg = (function()
             }
         }
         return [width, height];
-    }
+    };
 
     MinifyJpeg.encode64 = function(input)
     {
@@ -117,25 +117,23 @@ var MinifyJpeg = (function()
                enc4 = 64;
             }
 
-            output = output +
-               this.KEY_STR.charAt(enc1) +
-               this.KEY_STR.charAt(enc2) +
-               this.KEY_STR.charAt(enc3) +
-               this.KEY_STR.charAt(enc4);
+            output += this.KEY_STR.charAt(enc1) +
+                              this.KEY_STR.charAt(enc2) +
+                              this.KEY_STR.charAt(enc3) +
+                              this.KEY_STR.charAt(enc4);
             chr1 = chr2 = chr3 = "";
             enc1 = enc2 = enc3 = enc4 = "";
         } while (i < input.length);
-
         return output;
-    }
+    };
 
     MinifyJpeg.decode64 = function(input) {
         var output = "",
-            chr1, chr2, chr3 = "",
-            enc1, enc2, enc3, enc4 = "",
-            i = 0,
-            buf = [];
-
+               chr1, chr2, chr3 = "",
+               enc1, enc2, enc3, enc4 = "",
+               i = 0,
+               buf = [];
+ 
         // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
         var base64test = /[^A-Za-z0-9\+\/\=]/g;
         if (base64test.exec(input)) {
@@ -143,7 +141,7 @@ var MinifyJpeg = (function()
                   "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
                   "Expect errors in decoding.");
         }
-        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");       
 
         do {
             enc1 = this.KEY_STR.indexOf(input.charAt(i++));
@@ -170,7 +168,7 @@ var MinifyJpeg = (function()
         } while (i < input.length);
 
         return buf;
-    }
+    };
 
     MinifyJpeg.resizeImage = function(imageStr, rawImage, segments, NEW_SIZE)
     {
@@ -230,7 +228,7 @@ var MinifyJpeg = (function()
         }
 
         return resizedImage;
-    }
+    };
 
     MinifyJpeg.getExifArray = function(segments)
     {
@@ -258,7 +256,7 @@ var MinifyJpeg = (function()
         array = array.concat(exifArray);
         array = array.concat(ato);
         return array
-    }
+    };
 
     MinifyJpeg.exifManipulation = function(lostExifImageStr, segments)
     {
@@ -267,14 +265,14 @@ var MinifyJpeg = (function()
             aBuffer = new Uint8Array(newImageArray);
 
         return aBuffer;
-    }
+    };
 
 
     // compute vector index from matrix one
     MinifyJpeg.ivect = function (ix, iy, w) {
     	// byte array, r,g,b,a
     	return((ix + w * iy) * 4);
-    }
+    };
 
     MinifyJpeg.bilinear = function (srcImg, destImg, scale) {
     	// c.f.: wikipedia english article on bilinear interpolation
@@ -328,6 +326,6 @@ var MinifyJpeg = (function()
     			// log.debug(sprintf("pixel: j:%d, i:%d; r:%d, g:%d, b:%d", j, i, r, g, b));
     		}
     	}
-    }
+    };
     return MinifyJpeg;
 })();
