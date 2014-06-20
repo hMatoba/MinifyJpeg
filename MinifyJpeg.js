@@ -279,8 +279,8 @@ var MinifyJpeg = (function()
     	//log.debug("in bilinear");
     	// taking the unit square
     	function inner(f00, f10, f01, f11, x, y) {
-    		var un_x = 1.0 - x; var un_y = 1.0 - y;
-    		return (f00 * un_x * un_y + f10 * x * un_y + f01 * un_x * y + f11 * x * y);
+            var un_x = 1.0 - x; var un_y = 1.0 - y;
+            return (f00 * un_x * un_y + f10 * x * un_y + f01 * un_x * y + f11 * x * y);
     	}
         var srcWidth = srcImg.width;
         var srcHeight = srcImg.height;
@@ -293,34 +293,34 @@ var MinifyJpeg = (function()
     	var r, g, b, a;
     	for (i = 0; i < destImg.height; ++i) {
             iyv = (i + 0.5) / scale - 0.5;
-    		iy0 = Math.floor(iyv);
-    		iy1 = ( Math.ceil(iyv) > (srcHeight-1) ? (srcHeight-1) : Math.ceil(iyv) );
+            iy0 = Math.floor(iyv);
+            iy1 = ( Math.ceil(iyv) > (srcHeight-1) ? (srcHeight-1) : Math.ceil(iyv) );
     		for (j = 0; j < destImg.width; ++j) {
                 ixv = (j + 0.5) / scale - 0.5;
-    			ix0 = Math.floor(ixv);
-    			ix1 = ( Math.ceil(ixv) > (srcWidth-1) ? (srcWidth-1) : Math.ceil(ixv) );
-    			idxD = that.ivect(j, i, destImg.width);
-    			idxS00 = that.ivect(ix0, iy0, srcWidth);
-    			idxS10 = that.ivect(ix1, iy0, srcWidth);
-    			idxS01 = that.ivect(ix0, iy1, srcWidth);
-    			idxS11 = that.ivect(ix1, iy1, srcWidth);
-    			// log.debug(sprintf("bilinear: idx: D: %d, S00: %d, S10: %d, S01: %d, S11: %d", idxD, idxS00, idxS10, idxS01, idxS11));
-    			dx = ixv - ix0; dy = iyv - iy0;
+                ix0 = Math.floor(ixv);
+                ix1 = ( Math.ceil(ixv) > (srcWidth-1) ? (srcWidth-1) : Math.ceil(ixv) );
+                idxD = that.ivect(j, i, destImg.width);
+                idxS00 = that.ivect(ix0, iy0, srcWidth);
+                idxS10 = that.ivect(ix1, iy0, srcWidth);
+                idxS01 = that.ivect(ix0, iy1, srcWidth);
+                idxS11 = that.ivect(ix1, iy1, srcWidth);
+                // log.debug(sprintf("bilinear: idx: D: %d, S00: %d, S10: %d, S01: %d, S11: %d", idxD, idxS00, idxS10, idxS01, idxS11));
+                dx = ixv - ix0; dy = iyv - iy0;
 
                 //r
-    			dstData[idxD] = inner(srcData[idxS00], srcData[idxS10],
+                dstData[idxD] = inner(srcData[idxS00], srcData[idxS10],
                 srcData[idxS01], srcData[idxS11], dx, dy);
 
                 //g
-    			dstData[idxD+1] = inner(srcData[idxS00+1], srcData[idxS10+1],
+                dstData[idxD+1] = inner(srcData[idxS00+1], srcData[idxS10+1],
                 srcData[idxS01+1], srcData[idxS11+1], dx, dy);
 
                 //b
-    			dstData[idxD+2] = inner(srcData[idxS00+2], srcData[idxS10+2],
+                dstData[idxD+2] = inner(srcData[idxS00+2], srcData[idxS10+2],
                 srcData[idxS01+2], srcData[idxS11+2], dx, dy);
 
                 //a
-    			dstData[idxD+3] = inner(srcData[idxS00+3], srcData[idxS10+3],
+                dstData[idxD+3] = inner(srcData[idxS00+3], srcData[idxS10+3],
                 srcData[idxS01+3], srcData[idxS11+3], dx, dy);
 
     			// log.debug(sprintf("pixel: j:%d, i:%d; r:%d, g:%d, b:%d", j, i, r, g, b));
