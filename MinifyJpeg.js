@@ -129,10 +129,10 @@ var MinifyJpeg = (function()
 
     that.decode64 = function(input) {
         var output = "",
-               chr1, chr2, chr3 = "",
-               enc1, enc2, enc3, enc4 = "",
-               i = 0,
-               buf = [];
+            chr1, chr2, chr3 = "",
+            enc1, enc2, enc3, enc4 = "",
+            i = 0,
+            buf = [];
  
         // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
         var base64test = /[^A-Za-z0-9\+\/\=]/g;
