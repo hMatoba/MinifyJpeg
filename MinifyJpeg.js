@@ -15,6 +15,11 @@
 
 var MinifyJpeg = (function()
 {
+    if (typeof JpegImage == "undefined")
+    {
+        throw new ReferenceError("Load jpg.js!");
+    }
+    
     var that = {};
 
     that.KEY_STR = "ABCDEFGHIJKLMNOP" +
