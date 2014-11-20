@@ -46,7 +46,10 @@ var MinifyJpeg = (function()
 
     that.minify = function(imageStr, chouhen)
     {
-        if (!imageStr.match("data:image/jpeg;base64,")){throw "MinifyJpeg.minify got a not JPEG data";}
+        if (!imageStr.match("data:image/jpeg;base64,"))
+        {
+            throw "MinifyJpeg.minify got a not JPEG data";
+        }
         var startTime = new Date();
         var NEW_SIZE = parseInt(chouhen);
         var rawImage = that.decode64(imageStr.replace("data:image/jpeg;base64,", ""));
@@ -61,8 +64,7 @@ var MinifyJpeg = (function()
         {
             var image = new Uint8Array(rawImage);
         }
-        var time = ((new Date()) - startTime) / 1000;
-        console.log(time + "[s]");
+
         return image;
     };
 
@@ -79,7 +81,10 @@ var MinifyJpeg = (function()
 
         while (1)
         {
-            if (rawImageArray[head] == 255 & rawImageArray[head + 1] == 218){break;}
+            if (rawImageArray[head] == 255 & rawImageArray[head + 1] == 218)
+            {
+                break;
+            }
             if (rawImageArray[head] == 255 & rawImageArray[head + 1] == 216)
             {
                 head += 2;
@@ -92,7 +97,10 @@ var MinifyJpeg = (function()
                 segments.push(seg);
                 head = endPoint;
             }
-            if (head > rawImageArray.length){break;}
+            if (head > rawImageArray.length)
+            {
+                break;
+            }
         }
 
         return segments;
