@@ -3,12 +3,29 @@ JavaScript-MinifyJpeg
 
 To minify JPEG images without losing EXIF.
 
+
+Depends on jpg.js(https://github.com/notmasteryet/jpgjs)
+--------------------------------------------------------
+   Copyright 2011 notmasteryet
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
 Demo
---------
-  <http://blog-imgs-51-origin.fc2.com/e/l/i/elicon/20130125115221442.html>
+----
+  Copy this project on desktop and open example.html
 
 How to Use
---------
+----------
     <input type="file" id="files" name="files[]" multiple />
     <script source="/js/jpg.js" />
     <script source="/js/MinifyJpeg.js" />
@@ -32,7 +49,3 @@ How to Use
             reader.readAsDataURL(f);
         }
     }
-
-Depend on
---------
-  <https://github.com/notmasteryet/jpgjs>

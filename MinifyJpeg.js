@@ -1,6 +1,20 @@
-/* Minify a jpeg image without loosing EXIF
+/* MinifyJpeg depends on jpg.js(https://github.com/notmasteryet/jpgjs)
+   jpg.js's license is below.
+
+   Copyright 2011 notmasteryet
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+
+ * To minify a jpeg image without loosing EXIF.
  * TESTED(24/01/2013): FireFox, GoogleChrome, IE10, Opera
- * depend on jpg.js
  *
  * To minify jpeg image:
  *     minified = MinifyJpeg.minify(image, length);
@@ -19,7 +33,7 @@ var MinifyJpeg = (function()
     {
         throw new ReferenceError("Load jpg.js!");
     }
-    
+
     var that = {};
 
     that.KEY_STR = "ABCDEFGHIJKLMNOP" +
@@ -138,7 +152,7 @@ var MinifyJpeg = (function()
             enc1, enc2, enc3, enc4 = "",
             i = 0,
             buf = [];
- 
+
         // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
         var base64test = /[^A-Za-z0-9\+\/\=]/g;
         if (base64test.exec(input)) {
@@ -146,7 +160,7 @@ var MinifyJpeg = (function()
                   "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
                   "Expect errors in decoding.");
         }
-        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");       
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
         do {
             enc1 = that.KEY_STR.indexOf(input.charAt(i++));
