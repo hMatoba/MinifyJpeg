@@ -4,9 +4,9 @@ JavaScript-MinifyJpeg
 To minify JPEG images without losing EXIF.
 
 
-Depends on jpg.js(https://github.com/notmasteryet/jpgjs)
+Depends on jpg.js
 --------------------------------------------------------
-   Copyright 2011 notmasteryet
+   Copyright 2011 notmasteryet(https://github.com/notmasteryet/jpgjs)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

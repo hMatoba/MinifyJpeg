@@ -44,28 +44,54 @@ var MinifyJpeg = (function()
 
     that.SOF = [192, 193, 194, 195, 197, 198, 199, 201, 202, 203, 205, 206, 207];
 
-    that.minify = function(imageStr, chouhen)
+    that.minify = function(image, chouhen)
     {
-        if (!imageStr.match("data:image/jpeg;base64,"))
+        if (image instanceof ArrayBuffer)
         {
-            throw "MinifyJpeg.minify got a not JPEG data";
+            if (image[0] == 255 && image[1] == 216)
+            {
+                var rawImage = [];
+                for (var i=0; i<image.byteLength; i++)
+                {
+                    rawImage[i] = image[i];
+                }
+            }
+            else
+            {
+                throw "MinifyJpeg.minify got a not JPEG data";
+            }
         }
-        var startTime = new Date();
-        var NEW_SIZE = parseInt(chouhen);
-        var rawImage = that.decode64(imageStr.replace("data:image/jpeg;base64,", ""));
-        var segments = that.slice2Segments(rawImage);
-        var resized = that.resizeImage(imageStr, rawImage, segments, NEW_SIZE);
-
-        if (resized)
+        else if (typeof(image) == "string")
         {
-            var image = that.exifManipulation(resized, segments);
+            if (!image.match("data:image/jpeg;base64,"))
+            {
+                throw "MinifyJpeg.minify got a not JPEG data";
+            }
+            else
+            {
+                var rawImage = that.decode64(image.replace("data:image/jpeg;base64,", ""));
+            }
         }
         else
         {
-            var image = new Uint8Array(rawImage);
+            throw "First argument must be 'DataURL string' or ArrayBuffer.";
         }
 
-        return image;
+        var NEW_SIZE = parseInt(chouhen);
+        var segments = that.slice2Segments(rawImage);
+        var exif = that.getExif(segments);
+        var resized = that.resizeImage(rawImage, segments, NEW_SIZE);
+
+        if (exif.length)
+        {
+            var newImage = that.insertExif(resized, exif);
+        }
+        else
+        {
+            var newImage = new Uint8Array(that.decode64(resized.replace("data:image/jpeg;base64,", "")));
+        }
+
+        return newImage;
     };
 
     that.getImageSize = function(imageArray)
@@ -197,24 +223,17 @@ var MinifyJpeg = (function()
         return buf;
     };
 
-    that.resizeImage = function(imageStr, rawImage, segments, NEW_SIZE)
+    that.resizeImage = function(rawImage, segments, NEW_SIZE)
     {
         var size = that.imageSizeFromSegments(segments),
             width = size[0],
             height = size[1],
             chouhen = (width>=height) ? width : height,
             newSize = NEW_SIZE,
-            resizing = 1;
-
-        if (chouhen < newSize)
-        {
-            return false;
-        }
-        else{
-            var scale = parseFloat(newSize)/chouhen;
-            var newWidth = parseInt(parseFloat(newSize)/chouhen * width);
-            var newHeight = parseInt(parseFloat(newSize)/chouhen * height);
-        }
+            resizing = 1,
+            scale = parseFloat(newSize) / chouhen,
+            newWidth = parseInt(parseFloat(newSize) / chouhen * width),
+            newHeight = parseInt(parseFloat(newSize) / chouhen * height);
 
         if (resizing == 1) // bilinear
         {
@@ -257,7 +276,7 @@ var MinifyJpeg = (function()
         return resizedImage;
     };
 
-    that.getExifArray = function(segments)
+    that.getExif = function(segments)
     {
         var seg;
         for (var x=0; x<segments.length; x++)
@@ -273,27 +292,16 @@ var MinifyJpeg = (function()
 
     that.insertExif = function(imageStr, exifArray)
     {
-        var imageData = imageStr.replace("data:image/jpeg;base64,", ""),
-            buf = that.decode64(imageData),
+        var buf = that.decode64(imageStr.replace("data:image/jpeg;base64,", "")),
             separatePoint = buf.indexOf(255,3),
             mae = buf.slice(0, separatePoint),
             ato = buf.slice(separatePoint),
-            array = mae;
+            array = mae.concat(exifArray, ato);
 
-        array = array.concat(exifArray);
-        array = array.concat(ato);
-        return array
-    };
-
-    that.exifManipulation = function(lostExifImageStr, segments)
-    {
-        var exifArray = that.getExifArray(segments),
-            newImageArray = that.insertExif(lostExifImageStr, exifArray),
-            aBuffer = new Uint8Array(newImageArray);
+        aBuffer = new Uint8Array(array);
 
         return aBuffer;
     };
-
 
     // compute vector index from matrix one
     that.ivect = function (ix, iy, w) {

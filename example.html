@@ -48,7 +48,10 @@ function handleFiles()
     }
     f = fileArray.shift(0);
     $("#keika").html("Left: " + (fileArray.length + 1));
-    if (processedFiles.indexOf(f.name) >= 0){return handleFiles(fileArray);}
+    if (processedFiles.indexOf(f.name) >= 0)
+    {
+        return handleFiles(fileArray);
+    }
     processedFiles.push(f.name);
     var reader = new FileReader();
     var n = processedFiles.length;
@@ -71,7 +74,8 @@ function handleFiles()
     })(f, n);
 
     // Read in the image file as a data URL.
-    reader.readAsDataURL(f);
+    //reader.readAsDataURL(f);
+    reader.readAsArrayBuffer(f);
 }
 
 function postData(data, name, i)
