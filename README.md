@@ -9,6 +9,14 @@ Demo
   Copy this project on desktop and open example.html
 
 
+Functions
+---------
+    minify(image, length) - Resizes propotionally. Returns resized jpeg data as Uint8Array
+        image - jpeg data(DataURL string or ArrayBuffer)
+        length - int value of new image's long side length
+    encode64(data) - Convert Typed Array to DataURL string
+
+
 How to Use
 ----------
     <input type="file" id="files" name="files[]" multiple />
