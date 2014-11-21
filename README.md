@@ -6,7 +6,7 @@ To minify JPEG images without losing EXIF.
 
 Demo
 ----
-  Copy this project on desktop and open example.html
+    Copy this project on desktop and open example.html
 
 
 Functions
