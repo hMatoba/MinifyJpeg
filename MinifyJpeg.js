@@ -44,7 +44,7 @@ var MinifyJpeg = (function()
 
     that.SOF = [192, 193, 194, 195, 197, 198, 199, 201, 202, 203, 205, 206, 207];
 
-    that.minify = function(image, chouhen)
+    that.minify = function(image, new_size)
     {
         if (image instanceof ArrayBuffer)
         {
@@ -77,8 +77,15 @@ var MinifyJpeg = (function()
             throw "First argument must be 'DataURL string' or ArrayBuffer.";
         }
 
-        var NEW_SIZE = parseInt(chouhen);
         var segments = that.slice2Segments(rawImage);
+        var NEW_SIZE = parseInt(new_size);
+        var size = that.imageSizeFromSegments(segments);
+        var chouhen = (size[0] >= size[1]) ? size[0] : size[1];
+        if (chouhen < NEW_SIZE)
+        {
+            return new Uint8Array(rawImage);
+        }
+
         var exif = that.getExif(segments);
         var resized = that.resizeImage(rawImage, segments, NEW_SIZE);
 
