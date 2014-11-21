@@ -11,9 +11,10 @@ Demo
 
 Functions
 ---------
-    minify(image, length) - Resizes propotionally. Returns resized jpeg data as Uint8Array
+    minify(image, sideLength) - Resizes propotionally. Returns resized jpeg data as Uint8Array.
+          If desired size is bigger than input, no manipulation is done.
         image - jpeg data(DataURL string or ArrayBuffer)
-        length - int value of new image's long side length
+        sideLength - int value of new image's long side length
     encode64(data) - Convert Typed Array to DataURL string
 
 
