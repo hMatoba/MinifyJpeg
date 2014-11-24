@@ -6,7 +6,7 @@ To minify JPEG images without losing EXIF.
 
 Demo
 ----
-    Copy this project on desktop and open example.html
+Copy this project on desktop and open example.html
 
 
 Functions
@@ -47,9 +47,9 @@ How to Use
 
 License
 -------
-    This software is released under the MIT License, see LICENSE.txt.
+This software is released under the MIT License, see LICENSE.txt.
 
 
 Depends on jpg.js
 -----------------
-    When this software is used with 'jpg.js', specify jpg.js's license.
+When this software is used with 'jpg.js', specify jpg.js's license.
