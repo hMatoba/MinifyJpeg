@@ -53,3 +53,8 @@ This software is released under the MIT License, see LICENSE.txt.
 Depends on jpg.js
 -----------------
 When this software is used with 'jpg.js', specify jpg.js's license.
+
+
+See also
+--------
+[MinifyJpegAsync](https://github.com/hMatoba/JavaScript-MinifyJpegAsync)
